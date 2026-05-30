@@ -48,8 +48,21 @@
 </header>
 
 <div class="game-wrapper">
-    <iframe class="game-container" src="https://glennfb83.github.io/Snow-Rider3D/" allow="fullscreen"></iframe>
+    <iframe class="game-container" src="https://glennfb83.github.io/Snow-Rider3D/" allow="fullscreen" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"></iframe>
 </div>
+
+<script>
+    // Intercept and block window.open() calls
+    window.open = function() { return null; };
+    
+    // Block link clicks that try to open new tabs
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' && e.target.target === '_blank') {
+            e.preventDefault();
+            return false;
+        }
+    }, true);
+</script>
 
 </body>
 </html>
