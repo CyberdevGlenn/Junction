@@ -2,7 +2,7 @@
 
 ## Overview
 
-Junction is a web platform that combines games, tools, and community features into a single website.
+Junction is a web platform that combines games and community features into a single website.
 
 The project is currently in development.
 
@@ -11,10 +11,6 @@ The project is currently in development.
 ### Games
 
 Interactive browser-based games.
-
-### Tools
-
-Utility, productivity, educational, and calculation tools.
 
 ### Community
 
@@ -48,11 +44,9 @@ junction/
 │   └── app.js
 │
 ├── pages/
-│   ├── tools.html
 │   ├── games.html
 │   └── community.html
 │
-├── tools/
 ├── games/
 ├── assets/
 │
