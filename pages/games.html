@@ -5,48 +5,59 @@
 <title>Games | Junction</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
+    main.games-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
     .game-category {
-        margin: 2rem 0;
+        margin-bottom: 50px;
     }
 
     .game-category h2 {
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 1rem;
-        border-bottom: 2px solid #007bff;
-        padding-bottom: 0.5rem;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .game-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
     }
 
     .game-btn {
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1rem;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 2px solid rgba(37, 99, 235, 0.5);
+        border-radius: 12px;
+        padding: 20px 15px;
         text-align: center;
         text-decoration: none;
-        color: #333;
+        color: #fff;
         transition: all 0.3s ease;
-        font-size: 0.95rem;
-        font-weight: 500;
+        font-size: 1rem;
+        font-weight: 600;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100px;
     }
 
     .game-btn:hover {
-        background-color: #007bff;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        border-color: #2563eb;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
     }
 
     .game-btn:active {
-        transform: translateY(0);
+        transform: translateY(-2px);
     }
 </style>
 </head>
@@ -64,7 +75,7 @@
     <p>Play a variety of games, organized by category.</p>
 </main>
 
-<main style="max-width: 1000px; margin: 2rem auto; padding: 0 1rem;">
+<main class="games-container">
 
     <!-- Sandbox Category -->
     <div class="game-category">
