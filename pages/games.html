@@ -4,6 +4,51 @@
 <meta charset="UTF-8">
 <title>Games | Junction</title>
 <link rel="stylesheet" href="../css/style.css">
+<style>
+    .game-category {
+        margin: 2rem 0;
+    }
+
+    .game-category h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 0.5rem;
+    }
+
+    .game-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .game-btn {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .game-btn:hover {
+        background-color: #007bff;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    .game-btn:active {
+        transform: translateY(0);
+    }
+</style>
 </head>
 <body>
 
@@ -16,7 +61,19 @@
 
 <main class="hero">
     <h1>Games</h1>
-    <p>Games coming soon.</p>
+    <p>Play a variety of games, organized by category.</p>
+</main>
+
+<main style="max-width: 1000px; margin: 2rem auto; padding: 0 1rem;">
+
+    <!-- Sandbox Category -->
+    <div class="game-category">
+        <h2>🏗 Sandbox</h2>
+        <div class="game-grid">
+            <a href="../games/sandbox/eaglercraft.html" class="game-btn">Eaglercraft</a>
+        </div>
+    </div>
+
 </main>
 
 </body>
