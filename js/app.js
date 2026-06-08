@@ -41,10 +41,8 @@ function toggleDarkMode() {
     }
 }
 
-// Initialize dark mode on page load
-document.addEventListener('DOMContentLoaded', () => {
-    initializeDarkMode();
-});
+// Initialize dark mode immediately (script runs at end of body, so DOM is ready)
+initializeDarkMode();
 
 // Add click listener to toggle button
 if (darkModeToggle) {
