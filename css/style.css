@@ -4,13 +4,50 @@
     box-sizing:border-box;
 }
 
+/* Light Mode (Default) */
+:root {
+    --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    --bg-secondary: rgba(255, 255, 255, 0.95);
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-light: white;
+    --card-bg: white;
+    --accent-primary: #667eea;
+    --accent-secondary: #764ba2;
+    --accent-tertiary: #f093fb;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow-hover: rgba(0, 0, 0, 0.2);
+    --header-text: #667eea;
+    --toggle-bg: #333;
+    --toggle-circle-bg: #f0f0f0;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #2d3561 100%);
+    --bg-secondary: rgba(30, 30, 46, 0.95);
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-light: #e0e0e0;
+    --card-bg: #1e1e2e;
+    --accent-primary: #7c8dd4;
+    --accent-secondary: #9d4edd;
+    --accent-tertiary: #f72585;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --shadow-hover: rgba(0, 0, 0, 0.6);
+    --header-text: #e0e0e0;
+    --toggle-bg: #e0e0e0;
+    --toggle-circle-bg: #333;
+}
+
 body{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    background: var(--bg-primary);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
-    color:#333;
+    color: var(--text-primary);
     min-height:100vh;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 @keyframes gradientShift {
@@ -24,28 +61,31 @@ header{
     justify-content:space-between;
     align-items:center;
     padding:20px 40px;
-    background:rgba(255, 255, 255, 0.95);
+    background: var(--bg-secondary);
     backdrop-filter: blur(10px);
-    box-shadow:0 4px 30px rgba(0, 0, 0, 0.1);
-    border-bottom:3px solid #667eea;
+    box-shadow:0 4px 30px var(--shadow);
+    border-bottom:3px solid var(--accent-primary);
+    transition: all 0.3s ease;
 }
 
 .logo{
     font-size:1.8rem;
     font-weight:800;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    transition: all 0.3s ease;
 }
 
 nav{
     display:flex;
     gap:30px;
+    align-items:center;
 }
 
 nav a{
-    color:#667eea;
+    color: var(--header-text);
     text-decoration:none;
     font-weight:600;
     font-size:1.05rem;
@@ -60,7 +100,7 @@ nav a::after{
     left:0;
     width:0;
     height:3px;
-    background: linear-gradient(90deg, #764ba2, #f093fb);
+    background: linear-gradient(90deg, var(--accent-secondary), var(--accent-tertiary));
     transition: width 0.3s ease;
 }
 
@@ -72,6 +112,34 @@ nav a:hover{
     transform:translateY(-2px);
 }
 
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    background: var(--toggle-bg);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 40px;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+}
+
+.dark-mode-toggle::after {
+    content: '☀️';
+}
+
+body.dark-mode .dark-mode-toggle::after {
+    content: '🌙';
+}
+
 .hero{
     text-align:center;
     padding:80px 20px;
@@ -80,10 +148,11 @@ nav a:hover{
 .hero h1{
     font-size:3.5rem;
     margin-bottom:15px;
-    color:white;
+    color: var(--text-light);
     text-shadow:2px 2px 4px rgba(0, 0, 0, 0.2);
     font-weight:800;
     animation:bounceIn 0.8s ease;
+    transition: color 0.3s ease;
 }
 
 @keyframes bounceIn {
@@ -93,11 +162,12 @@ nav a:hover{
 }
 
 .hero p{
-    color:white;
+    color: var(--text-light);
     margin-bottom:30px;
     font-size:1.3rem;
     text-shadow:1px 1px 3px rgba(0, 0, 0, 0.2);
     font-weight:500;
+    transition: color 0.3s ease;
 }
 
 .hero-buttons{
@@ -108,8 +178,8 @@ nav a:hover{
 }
 
 .btn{
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color:white;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: var(--text-light);
     text-decoration:none;
     padding:15px 32px;
     border-radius:50px;
@@ -131,7 +201,7 @@ nav a:hover{
 }
 
 .btn-secondary{
-    background: linear-gradient(135deg, #f093fb, #f5576c);
+    background: linear-gradient(135deg, var(--accent-tertiary), #f5576c);
     box-shadow:0 8px 20px rgba(245, 87, 108, 0.4);
 }
 
@@ -149,13 +219,13 @@ nav a:hover{
 }
 
 .card{
-    background:white;
+    background: var(--card-bg);
     padding:35px;
     border-radius:20px;
     text-decoration:none;
-    color:#333;
+    color: var(--text-primary);
     transition: all 0.3s ease;
-    box-shadow:0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow:0 10px 30px var(--shadow);
     border:3px solid transparent;
     position:relative;
     overflow:hidden;
@@ -168,33 +238,36 @@ nav a:hover{
     left:0;
     width:100%;
     height:4px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
 }
 
 .card:hover{
     transform:translateY(-10px) scale(1.02);
-    box-shadow:0 20px 40px rgba(0, 0, 0, 0.2);
-    border-color:#667eea;
+    box-shadow:0 20px 40px var(--shadow-hover);
+    border-color: var(--accent-primary);
 }
 
 .card h2{
     margin-bottom:12px;
     font-size:1.5rem;
-    color:#667eea;
+    color: var(--accent-primary);
+    transition: color 0.3s ease;
 }
 
 .card p{
-    color:#666;
+    color: var(--text-secondary);
     line-height:1.6;
     font-size:1rem;
+    transition: color 0.3s ease;
 }
 
 footer{
     text-align:center;
     padding:30px 20px;
-    color:white;
-    background:rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     margin-top:40px;
     font-weight:500;
+    transition: all 0.3s ease;
 }
