@@ -226,7 +226,7 @@ body.dark-mode .dark-mode-toggle::after {
     color: var(--text-primary);
     transition: all 0.3s ease;
     box-shadow:0 10px 30px var(--shadow);
-    border:3px solid transparent;
+    border:none;
     position:relative;
     overflow:hidden;
 }
@@ -234,7 +234,6 @@ body.dark-mode .dark-mode-toggle::after {
 .card:hover{
     transform:translateY(-10px) scale(1.02);
     box-shadow:0 20px 40px var(--shadow-hover);
-    border-color: var(--accent-primary);
 }
 
 .card h2{
