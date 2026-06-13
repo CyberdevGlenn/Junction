@@ -228,7 +228,6 @@ body.dark-mode .dark-mode-toggle::after {
     box-shadow:0 10px 30px var(--shadow);
     border:none;
     position:relative;
-    overflow:hidden;
 }
 
 .card:hover{
