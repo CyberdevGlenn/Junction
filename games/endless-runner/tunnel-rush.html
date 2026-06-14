@@ -58,34 +58,6 @@ header {
   height: 100% !important;
 }
 
-button#run_game {
-  min-width: 100%;
-  font-family: inherit;
-  appearance: none;
-  border: 0;
-  border-radius: 5px;
-  background: #2c2c2c;
-  color: #fff;
-  padding: 18px 46px;
-  font-size: 28px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-}
-
-button#run_game:hover {
-  background: #3f3f3f;
-}
-
-button#run_game:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px #cbd6ee;
-}
-
 .logo.Dark {
   display: none !important;
 }
@@ -122,19 +94,7 @@ button#run_game:focus {
 <script type="text/javascript">
   var gameInstance;
   window.onload = function () {
-    let bttn = document.createElement("button");
-    bttn.appendChild(document.createTextNode("CLICK TO PLAY NOW"));
-    bttn.setAttribute('id', 'run_game');
-    bttn.style.display = 'none';
-    bttn.style.position = 'absolute';
-    document.body.appendChild(bttn);
-    bttn.style.display = 'block';
-    bttn.style.left = ((document.body.clientWidth - bttn.offsetWidth)/2) + 'px';
-    bttn.style.top = ((document.body.clientHeight - bttn.offsetHeight)/2) + 'px';
-    bttn.onclick = function () {
-      gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/hyperwood/h4tfgh7@c4d52c61c545cc2d537d647ee6a882856d9baf34/tunnel-rush_v9.json", {onProgress: UnityProgress, Module:{onRuntimeInitialized: function() {UnityProgress(gameInstance, "complete")}}});
-      this.remove();
-    }
+    gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/hyperwood/h4tfgh7@c4d52c61c545cc2d537d647ee6a882856d9baf34/tunnel-rush_v9.json", {onProgress: UnityProgress});
   }
 </script>
 
