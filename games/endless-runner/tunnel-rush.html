@@ -65,10 +65,63 @@ header {
 .progress.Dark {
   display: none !important;
 }
+  /* Loading Screen */
+#loadingScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+.loader-content {
+  text-align: center;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.loader-content h1 {
+  margin-bottom: 20px;
+}
+
+.loader-bar-container {
+  width: 300px;
+  height: 20px;
+  background: #222;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#loaderBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg,#00ffff,#ff00ff);
+  transition: width .15s ease;
+}
+
+#loaderText {
+  margin-top: 10px;
+  font-size: 16px;
+}
 </style>
 </head>
 <body>
+<div id="loadingScreen">
+  <div class="loader-content">
+    <h1>Tunnel Rush</h1>
 
+    <div class="loader-bar-container">
+      <div id="loaderBar"></div>
+    </div>
+
+    <div id="loaderText">Loading... 0%</div>
+  </div>
+</div>
 <header>
     <div class="logo">Junction</div>
     <nav>
