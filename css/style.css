@@ -276,10 +276,25 @@ footer{
     transition: all 0.3s ease;
 }
 
+/* Minimized (improved visuals) */
 .chat-widget.minimized {
-    max-height: 60px;
+    width: 64px;
+    height: 64px;
+    max-height: none;
+    border-radius: 999px;
+    padding: 0;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+    overflow: visible;
 }
 
+/* hide the content and input when minimized */
+.chat-widget.minimized #chat-content,
+.chat-widget.minimized .chat-input-area,
+.chat-widget.minimized .chat-messages {
+    display: none;
+}
+
+/* header styling */
 .chat-header {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: var(--text-light);
@@ -290,6 +305,14 @@ footer{
     align-items: center;
     cursor: pointer;
     user-select: none;
+}
+
+/* header when the widget is minimized: center the button and make header fully circular */
+.chat-widget.minimized .chat-header {
+    padding: 0;
+    height: 64px;
+    border-radius: 999px;
+    justify-content: center;
 }
 
 .chat-header h3 {
@@ -318,23 +341,37 @@ footer{
     50% { opacity: 0.5; }
 }
 
+/* make minimize button larger and easier to press */
 .chat-minimize-btn {
-    background: none;
+    background: rgba(255,255,255,0.08);
     border: none;
     color: var(--text-light);
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     cursor: pointer;
     padding: 0;
-    width: 25px;
-    height: 25px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.18s ease, background 0.18s ease;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .chat-minimize-btn:hover {
-    transform: scale(1.1);
+    transform: scale(1.08);
+    background: rgba(255,255,255,0.12);
+}
+
+.chat-minimize-btn:focus {
+    outline: 3px solid rgba(102,126,234,0.18);
+}
+
+/* hide the header text & status in minimized state so the widget becomes a neat pill */
+.chat-widget.minimized .chat-header h3,
+.chat-widget.minimized .chat-header .chat-header-status {
+    display: none;
 }
 
 .chat-messages {
