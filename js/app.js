@@ -1,53 +1,95 @@
 console.log("Junction Loaded");
 
-// Dark Mode Functionality
-const darkModeToggle = document.querySelector('.dark-mode-toggle');
-const htmlElement = document.documentElement;
+// Dark Mode Functionality (robust across pages)
+const togglesSelector = '.dark-mode-toggle';
 
-// Check for saved dark mode preference or system preference
+function applyDarkMode(enabled) {
+    if (enabled) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'true');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'false');
+    }
+    updateToggleStates();
+}
+
+function updateToggleStates() {
+    const toggles = document.querySelectorAll(togglesSelector);
+    toggles.forEach(btn => {
+        // keep accessibility state in sync
+        btn.setAttribute('aria-pressed', document.body.classList.contains('dark-mode') ? 'true' : 'false');
+    });
+}
+
 function initializeDarkMode() {
     const savedMode = localStorage.getItem('darkMode');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
     if (savedMode !== null) {
-        // Use saved preference
-        if (savedMode === 'true') {
-            enableDarkMode();
-        }
-    } else if (prefersDark) {
-        // Use system preference
-        enableDarkMode();
-    }
-}
-
-// Enable dark mode
-function enableDarkMode() {
-    document.body.classList.add('dark-mode');
-    localStorage.setItem('darkMode', 'true');
-}
-
-// Disable dark mode
-function disableDarkMode() {
-    document.body.classList.remove('dark-mode');
-    localStorage.setItem('darkMode', 'false');
-}
-
-// Toggle dark mode
-function toggleDarkMode() {
-    if (document.body.classList.contains('dark-mode')) {
-        disableDarkMode();
+        applyDarkMode(savedMode === 'true');
     } else {
-        enableDarkMode();
+        applyDarkMode(!!prefersDark);
     }
 }
 
-// Initialize dark mode immediately (script runs at end of body, so DOM is ready)
-initializeDarkMode();
+function setupToggleListeners() {
+    const toggles = document.querySelectorAll(togglesSelector);
+    if (!toggles || toggles.length === 0) return;
 
-// Add click listener to toggle button
-if (darkModeToggle) {
-    darkModeToggle.addEventListener('click', toggleDarkMode);
+    toggles.forEach(btn => {
+        // ensure button is keyboard accessible and has role
+        if (!btn.hasAttribute('role')) btn.setAttribute('role', 'button');
+        if (!btn.hasAttribute('tabindex')) btn.setAttribute('tabindex', '0');
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            applyDarkMode(!document.body.classList.contains('dark-mode'));
+        });
+
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+            }
+        });
+    });
 }
+
+function watchSystemPreference() {
+    if (!window.matchMedia) return;
+    try {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const handler = (e) => {
+            // only follow system changes if user has not explicitly set a preference
+            if (localStorage.getItem('darkMode') === null) {
+                applyDarkMode(e.matches);
+            }
+        };
+
+        if (typeof mq.addEventListener === 'function') {
+            mq.addEventListener('change', handler);
+        } else if (typeof mq.addListener === 'function') {
+            mq.addListener(handler);
+        }
+    } catch (err) {
+        // ignore
+    }
+}
+
+// Initialize when DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeDarkMode();
+        setupToggleListeners();
+        watchSystemPreference();
+    });
+} else {
+    initializeDarkMode();
+    setupToggleListeners();
+    watchSystemPreference();
+}
+
 
 // ===== LIVE CHAT FUNCTIONALITY =====
 
@@ -80,6 +122,9 @@ class LiveChat {
     }
 
     createChatWidget() {
+        // avoid duplicate widget
+        if (document.getElementById('chat-widget')) return;
+
         const chatHTML = `
             <div class="chat-widget" id="chat-widget">
                 <div class="chat-header">
@@ -90,7 +135,7 @@ class LiveChat {
                             <span id="chat-status">Connecting...</span>
                         </div>
                     </div>
-                    <button class="chat-minimize-btn" id="chat-minimize">−</button>
+                    <button class="chat-minimize-btn" id="chat-minimize" aria-label="Minimize chat">−</button>
                 </div>
 
                 <div id="chat-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
@@ -105,7 +150,7 @@ class LiveChat {
                         placeholder="Type a message..."
                         autocomplete="off"
                     />
-                    <button class="chat-send-btn" id="chat-send-btn">➤</button>
+                    <button class="chat-send-btn" id="chat-send-btn" aria-label="Send message">➤</button>
                 </div>
             </div>
         `;
@@ -119,25 +164,32 @@ class LiveChat {
         const input = document.getElementById('chat-input');
         const header = document.querySelector('.chat-header');
 
-        // Minimize/Maximize
-        minimizeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleMinimize();
-        });
-
-        header.addEventListener('click', () => {
-            if (this.isMinimized) {
+        if (minimizeBtn) {
+            minimizeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.toggleMinimize();
-            }
-        });
+            });
+        }
 
-        // Send message
-        sendBtn.addEventListener('click', () => this.sendMessage());
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.sendMessage();
-            }
-        });
+        if (header) {
+            header.addEventListener('click', () => {
+                if (this.isMinimized) {
+                    this.toggleMinimize();
+                }
+            });
+        }
+
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => this.sendMessage());
+        }
+
+        if (input) {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.sendMessage();
+                }
+            });
+        }
     }
 
     toggleMinimize() {
@@ -165,9 +217,13 @@ class LiveChat {
             };
 
             this.wsConnection.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.type === 'message') {
-                    this.addMessage(data.username, data.message, data.userId, data.timestamp);
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'message') {
+                        this.addMessage(data.username, data.message, data.userId, data.timestamp);
+                    }
+                } catch (e) {
+                    console.log('Invalid WS message', e);
                 }
             };
 
@@ -194,16 +250,15 @@ class LiveChat {
         
         if (statusEl) {
             statusEl.textContent = status;
-            if (connected) {
-                statusDot.style.background = '#4ade80';
-            } else {
-                statusDot.style.background = '#ef4444';
+            if (statusDot) {
+                statusDot.style.background = connected ? '#4ade80' : '#ef4444';
             }
         }
     }
 
     sendMessage() {
         const input = document.getElementById('chat-input');
+        if (!input) return;
         const message = input.value.trim();
 
         if (!message) return;
@@ -233,6 +288,8 @@ class LiveChat {
 
     showUsernameSetup(firstMessage = '') {
         const messagesDiv = document.getElementById('chat-messages');
+        if (!messagesDiv) return;
+
         messagesDiv.innerHTML = `
             <div class="chat-username-setup">
                 <h4>What's your name?</h4>
@@ -249,23 +306,28 @@ class LiveChat {
         const usernameInput = document.getElementById('username-input');
         const usernameSubmit = document.getElementById('username-submit');
 
-        usernameInput.focus();
+        usernameInput && usernameInput.focus();
 
-        usernameSubmit.addEventListener('click', () => {
-            const username = usernameInput.value.trim();
+        usernameSubmit && usernameSubmit.addEventListener('click', () => {
+            const username = (usernameInput && usernameInput.value.trim()) || '';
             if (username) {
                 this.setUsername(username);
                 messagesDiv.innerHTML = '';
                 this.loadMessagesFromStorage();
                 if (firstMessage) {
-                    this.sendMessage();
+                    // put firstMessage into input then send
+                    const input = document.getElementById('chat-input');
+                    if (input) {
+                        input.value = firstMessage;
+                        this.sendMessage();
+                    }
                 }
             }
         });
 
-        usernameInput.addEventListener('keypress', (e) => {
+        usernameInput && usernameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                usernameSubmit.click();
+                usernameSubmit && usernameSubmit.click();
             }
         });
     }
@@ -286,6 +348,7 @@ class LiveChat {
 
     addMessage(username, message, userId, timestamp) {
         const messagesDiv = document.getElementById('chat-messages');
+        if (!messagesDiv) return;
         const isOwn = userId === this.userId;
 
         const timeObj = new Date(timestamp);
@@ -295,7 +358,7 @@ class LiveChat {
             hour12: true 
         });
 
-        const initials = username.substring(0, 2).toUpperCase();
+        const initials = (username || '').substring(0, 2).toUpperCase();
 
         const messageHTML = `
             <div class="message ${isOwn ? 'own' : ''}">
@@ -315,6 +378,7 @@ class LiveChat {
 
     scrollToBottom() {
         const messagesDiv = document.getElementById('chat-messages');
+        if (!messagesDiv) return;
         setTimeout(() => {
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 0);
@@ -326,20 +390,42 @@ class LiveChat {
 
     loadMessagesFromStorage() {
         const stored = localStorage.getItem('chatMessages');
+        const messagesDiv = document.getElementById('chat-messages');
+        if (!messagesDiv) return;
+
         if (stored) {
             try {
                 this.messages = JSON.parse(stored);
-                const messagesDiv = document.getElementById('chat-messages');
                 messagesDiv.innerHTML = '';
 
                 this.messages.forEach(msg => {
-                    this.addMessage(msg.username, msg.message, msg.userId, msg.timestamp);
+                    // reuse addMessage but avoid double-saving
+                    const time = msg.timestamp || new Date().toISOString();
+                    const username = msg.username || 'Guest';
+                    const message = msg.message || '';
+                    const userId = msg.userId || 'unknown';
+
+                    const isOwn = userId === this.userId;
+                    const initials = (username || '').substring(0,2).toUpperCase();
+
+                    const messageHTML = `
+                        <div class="message ${isOwn ? 'own' : ''}">
+                            ${!isOwn ? `<div class="message-avatar">${initials}</div>` : ''}
+                            <div>
+                                <div class="message-bubble">${this.escapeHtml(message)}</div>
+                                <div class="message-time">${new Date(time).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', hour12:true})}</div>
+                            </div>
+                        </div>
+                    `;
+
+                    messagesDiv.insertAdjacentHTML('beforeend', messageHTML);
                 });
+
+                this.scrollToBottom();
             } catch (e) {
                 console.log('Error loading stored messages:', e);
             }
         } else {
-            const messagesDiv = document.getElementById('chat-messages');
             messagesDiv.innerHTML = '<div class="empty-state">👋 Be the first to say hello!</div>';
         }
     }
