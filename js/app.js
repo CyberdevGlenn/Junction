@@ -98,7 +98,8 @@ class LiveChat {
         this.username = localStorage.getItem('chatUsername') || null;
         this.userId = localStorage.getItem('chatUserId') || this.generateUserId();
         this.messages = [];
-        this.isMinimized = false;
+        // start minimized by default
+        this.isMinimized = true;
         this.wsConnection = null;
         this.init();
     }
@@ -156,6 +157,17 @@ class LiveChat {
         `;
 
         document.body.insertAdjacentHTML('beforeend', chatHTML);
+
+        // reflect initial minimized state and update button/icon
+        const widget = document.getElementById('chat-widget');
+        const minimizeBtn = document.getElementById('chat-minimize');
+        if (minimizeBtn) {
+            minimizeBtn.setAttribute('aria-label', this.isMinimized ? 'Open chat' : 'Minimize chat');
+            minimizeBtn.textContent = this.isMinimized ? '💬' : '−';
+        }
+        if (this.isMinimized && widget) {
+            widget.classList.add('minimized');
+        }
     }
 
     attachEventListeners() {
@@ -195,7 +207,14 @@ class LiveChat {
     toggleMinimize() {
         const widget = document.getElementById('chat-widget');
         this.isMinimized = !this.isMinimized;
-        widget.classList.toggle('minimized');
+        if (widget) widget.classList.toggle('minimized');
+
+        const minimizeBtn = document.getElementById('chat-minimize');
+        if (minimizeBtn) {
+            minimizeBtn.setAttribute('aria-label', this.isMinimized ? 'Open chat' : 'Minimize chat');
+            // use emoji when closed to make it obvious and easier to tap
+            minimizeBtn.textContent = this.isMinimized ? '💬' : '−';
+        }
     }
 
     connectWebSocket() {
